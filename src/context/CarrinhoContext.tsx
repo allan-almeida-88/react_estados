@@ -4,7 +4,10 @@ import { createContext, useState } from "react";
 
 interface CarrinhoContextProps {
     itens: ItemCarrinho[]
-    adicionarItem: (produto: Produto) => void 
+    valorTotal: number
+    adicionarItem: (produto: Produto) => void
+    removerItem: (produto: Produto) => void
+    limparCarrinho: () => void
 }
 
 const CarrinhoContext = createContext<CarrinhoContextProps>({} as any)
@@ -14,13 +17,41 @@ export function CarrinhoProvider(props: any) {
     const [itens, setItens] = useState<ItemCarrinho[]>([])
 
     function adicionarItem(produto: Produto) {
-        setItens([...itens, {produto, quantidade: 1}])
+        const item = itens.find(i => i.produto.id === produto.id) ?? { produto, quantidade: 0 }
+        const novoItem = {...item, quantidade: item.quantidade + 1}
+        const outrosItens = itens.filter(i => i.produto.id != produto.id)
+        setItens([...outrosItens, novoItem].sort(ordernarItem))
+    }
+
+    function removerItem(produto: Produto) {
+        const novosItens = itens.map(item => {
+            return item.produto.id == produto.id ? {...item, quantidade:  item.quantidade -1} : item
+        }).filter(item => item.quantidade > 0)
+
+        setItens(novosItens)
+    }
+
+    function ordernarItem(a: ItemCarrinho, b: ItemCarrinho) {
+        return a.produto.nome > b.produto.nome ? 1 : -1
+    }
+
+    function calcularValorTotal() {
+        return itens.reduce((total: number, item: ItemCarrinho) => {
+            return total + (item.quantidade * item.produto.preco)
+        }, 0)
+    }
+
+    function limparCarrinho() {
+        setItens([])
     }
 
     return (
         <CarrinhoContext.Provider value={{ 
             itens,
-            adicionarItem
+            adicionarItem,
+            removerItem,
+            get valorTotal() {return calcularValorTotal()},
+            limparCarrinho
         }}>
             {props.children}
         </CarrinhoContext.Provider>
