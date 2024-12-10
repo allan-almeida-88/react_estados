@@ -1,8 +1,11 @@
 import Area from "../template/Area";
-import produtos from '@/data/constants/Produtos'
 import ProdutoCard from "./ProdutoCard";
+import { useContext } from "react";
+import CatalogoContext from "@/context/CatalogoContext";
 
 export default function Catalogo() {
+
+    const { produtos } = useContext(CatalogoContext)
 
     function renderizarProdutos() {
         return produtos.map(prod => {
