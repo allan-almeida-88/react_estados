@@ -1,6 +1,12 @@
 import { createContext, useState } from "react"
 
-export const ContadorProvider = createContext({})
+interface ContadorContextProps {
+    valor: number
+    incrementar: () => void
+    decrementar: () => void
+}
+
+export const ContadorProvider = createContext<ContadorContextProps>({} as any)
 
 export default function ContadorContext(props: any) {
 
