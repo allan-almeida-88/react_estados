@@ -1,6 +1,15 @@
+import { useContext } from "react";
 import Estatistica from "./Estatistica";
+import CursoContext from "@/context/CursoContext";
 
 export default function Estatisticas() {
+    const {
+        qtdeDeAulas, 
+        qtdeDeAulasConcluidas,
+        duracaoTotal,
+        duracaoConcluida,
+        percentualConclusao
+    } = useContext(CursoContext)
     return (
         <div 
             className="flex
@@ -9,11 +18,11 @@ export default function Estatisticas() {
                 justify-around items-center
                 "
         >
-            <Estatistica valor={10} texto="Quantidade Aulas"></Estatistica>
-            <Estatistica valor={5} texto="Aulas concluídas"></Estatistica>
-            <Estatistica valor={"2h 30m"} texto="Duração total"></Estatistica>
-            <Estatistica valor={"1h 24m"} texto="Duração concluída"></Estatistica>
-            <Estatistica valor={"58%"} texto="Perc. conclusão"></Estatistica>
+            <Estatistica valor={qtdeDeAulas} texto="Quantidade Aulas"></Estatistica>
+            <Estatistica valor={qtdeDeAulasConcluidas} texto="Aulas concluídas"></Estatistica>
+            <Estatistica valor={duracaoTotal} texto="Duração total"></Estatistica>
+            <Estatistica valor={duracaoConcluida} texto="Duração concluída"></Estatistica>
+            <Estatistica valor={`${percentualConclusao}%`} texto="Perc. conclusão"></Estatistica>
         </div>
     )
 }
